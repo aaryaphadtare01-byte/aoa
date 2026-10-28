@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AOA Code Library - Analysis of Algorithms Practicals</title>
+  <!-- 100% Offline: No external CDNs, fonts, or remote stylesheets -->
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="app-container">
+    <!-- Top Bar Navigation -->
+    <header class="top-header">
+      <div class="brand-section">
+        <button id="sidebarToggleBtn" class="sidebar-toggle-btn" aria-label="Toggle Sidebar Menu">☰</button>
+        <h1 class="brand-title">
+          <span>AOA Code Library</span>
+          <span class="brand-badge">Offline Practicals</span>
+        </h1>
+      </div>
+
+      <!-- Search Bar -->
+      <div class="search-section">
+        <div class="search-wrapper">
+          <span class="search-icon">🔍</span>
+          <input 
+            type="text" 
+            id="searchInput" 
+            class="search-input" 
+            placeholder="Search algorithms, categories, complexity... (Ctrl+K)"
+            autocomplete="off"
+            spellcheck="false"
+          >
+          <button id="searchClearBtn" class="search-clear-btn" title="Clear search">✕</button>
+          <span class="kbd-shortcut">Ctrl+K</span>
+        </div>
+      </div>
+
+      <!-- Header Actions -->
+      <div class="header-actions">
+        <button id="togglePlaceholdersBtn" class="btn btn-sm" title="Toggle between loaded practical code and empty placeholders view">
+          <span>Mode: Lab Practicals (11 Loaded)</span>
+        </button>
+      </div>
+    </header>
+
+    <!-- Main Workspace -->
+    <div class="app-workspace">
+      <!-- Left Sidebar -->
+      <aside id="appSidebar" class="app-sidebar">
+        <div class="sidebar-header">
+          <span class="sidebar-heading">Algorithm Catalog</span>
+          <span id="sidebarTotalCount" class="sidebar-stats">0 total</span>
+        </div>
+        <div class="sidebar-filters">
+          <button id="filterAllBtn" class="filter-chip active" data-filter="all">All (23)</button>
+          <button id="filterPracticalsBtn" class="filter-chip" data-filter="practicals">My 11 Codes</button>
+          <button id="filterPlaceholdersBtn" class="filter-chip" data-filter="placeholders">Pending (12)</button>
+        </div>
+        <div id="sidebarNavList" class="sidebar-scroll">
+          <!-- Populated dynamically by app.js -->
+        </div>
+      </aside>
+
+      <!-- Main Content Area -->
+      <main id="mainPanel" class="app-main">
+        <div class="main-content-wrapper">
+          <!-- Algorithm Header -->
+          <div class="algo-header">
+            <div class="algo-title-row">
+              <div class="algo-title-group">
+                <span id="algoCategoryBreadcrumb" class="algo-category-breadcrumb">Category</span>
+                <h2 id="algoTitle" class="algo-title">Algorithm Name</h2>
+              </div>
+              <div class="algo-actions-toolbar">
+                <button id="copyCodeBtn" class="btn btn-primary" title="Copy C Source Code">
+                  <span>📋 Copy Code</span>
+                </button>
+                <button id="pasteCodeBtn" class="btn" title="Paste or Edit C Source Code in browser">
+                  <span>✏️ Paste / Edit Code</span>
+                </button>
+                <button id="copyAllBtn" class="btn" title="Copy Complete Program">
+                  <span>Copy All</span>
+                </button>
+                <button id="printBtn" class="btn" title="Print-Friendly View">
+                  <span>🖨️ Print</span>
+                </button>
+              </div>
+            </div>
+
+            <!-- Metadata Chips -->
+            <div class="algo-meta-bar">
+              <div class="meta-chip">
+                <span>Time:</span>
+                <strong id="timeComplexity">O(—)</strong>
+              </div>
+              <div class="meta-chip">
+                <span>Space:</span>
+                <strong id="spaceComplexity">O(—)</strong>
+              </div>
+              <div class="meta-chip">
+                <span>Language:</span>
+                <strong>C (ANSI / C99 / C11)</strong>
+              </div>
+            </div>
+          </div>
+
+          <!-- Code Editor Panel Container -->
+          <section class="code-section">
+            <div class="code-header-bar">
+              <div class="code-header-info">
+                <span>SOURCE: main.c</span>
+                <span id="codeLinesCount">0 lines</span>
+                <span id="codeCharCount">0 chars</span>
+              </div>
+              <div class="code-header-actions">
+                <span>Monochrome IDE View</span>
+              </div>
+            </div>
+
+            <!-- Active Code Display -->
+            <div id="codeEditorPanel" class="code-editor-panel">
+              <div id="codeGutter" class="code-gutter">
+                <!-- Line numbers rendered dynamically -->
+              </div>
+              <pre id="codeContent" class="code-content"><code></code></pre>
+            </div>
+
+            <!-- Empty State Display (Rendered when algorithm has no code yet) -->
+            <div id="emptyStateBox" class="empty-state-box" style="display: none;">
+              <div class="empty-state-icon">📝</div>
+              <h3 class="empty-state-title">Pending Practical Submission</h3>
+              <p class="empty-state-desc">
+                No C source code has been added for <strong id="emptyStateAlgoName">this algorithm</strong> yet.
+                Empty placeholder entries do not fabricate fake programs.
+              </p>
+              <div class="empty-state-instructions">
+                <strong>How to add your program:</strong><br>
+                1. Click the button below to paste your code directly into the browser, OR<br>
+                2. Open <code>algorithms.js</code>, find <code>id: "<span id="emptyStateAlgoId">algo-id</span>"</code> and paste into <code>code: \`...your C code...\`</code>
+              </div>
+              <div style="margin-top: 0.85rem; display: flex; gap: 0.5rem; justify-content: center;">
+                <button id="emptyStatePasteBtn" class="btn btn-primary"><span>✏️ Paste Code for this Algorithm</span></button>
+              </div>
+            </div>
+          </section>
+
+          <!-- Extra Practical Details -->
+          <div class="details-grid">
+            <div id="inputOutputCard" class="detail-card">
+              <div class="detail-card-header">Sample Input & Output</div>
+              <div class="detail-card-body">
+                <pre id="inputOutputBox"></pre>
+              </div>
+            </div>
+
+            <div id="practicalNotesCard" class="detail-card">
+              <div class="detail-card-header">Practical Notes & Viva Tips</div>
+              <div id="practicalNotesBox" class="detail-card-body"></div>
+            </div>
+          </div>
+        </div>
+      </main>
+    </div>
+  </div>
+
+  <!-- Toast Notification -->
+  <div id="toastNotification" class="toast-notification" role="status" aria-live="polite">
+    <span id="toastMessage">Copied to clipboard!</span>
+  </div>
+
+  <!-- Offline Fallback Copy Modal (Used when browser blocks clipboard on file:// URLs) -->
+  <div id="fallbackModal" class="modal-backdrop" role="dialog" aria-modal="true" aria-labelledby="fallbackModalTitle">
+    <div class="modal-card">
+      <div class="modal-header">
+        <h3 id="fallbackModalTitle" class="modal-title">Manual Copy Fallback (<span id="fallbackAlgoName">Algorithm</span>)</h3>
+        <button id="fallbackModalClose" class="modal-close-btn" aria-label="Close dialog">✕</button>
+      </div>
+      <div class="modal-body">
+        <div class="modal-instructions">
+          Your browser's security settings restricted automatic clipboard access on this local <code>file://</code> document.<br>
+          <strong>The exact C code is selected below. Press <kbd>Ctrl+C</kbd> (or <kbd>Cmd+C</kbd>) now to copy it.</strong>
+        </div>
+        <textarea id="fallbackModalTextarea" class="modal-textarea" readonly spellcheck="false"></textarea>
+      </div>
+      <div class="modal-footer">
+        <button id="fallbackModalCopyBtn" class="btn btn-primary">Try Copy Again</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- In-Browser Paste & Edit Modal -->
+  <div id="pasteModal" class="modal-backdrop" role="dialog" aria-modal="true" aria-labelledby="pasteModalTitle">
+    <div class="modal-card">
+      <div class="modal-header">
+        <h3 id="pasteModalTitle" class="modal-title">Paste / Edit C Code: <span id="pasteModalAlgoName"></span></h3>
+        <button id="pasteModalClose" class="modal-close-btn" aria-label="Close dialog">✕</button>
+      </div>
+      <div class="modal-body">
+        <div class="modal-instructions">
+          Paste your exact C source code below. Click <strong>Save to Library</strong> to save it in your browser offline.
+        </div>
+        <div style="display: flex; gap: 0.5rem; flex-wrap: wrap;">
+          <button id="pasteFromClipboardBtn" class="btn btn-sm">📋 Paste from Clipboard</button>
+          <button id="clearPasteTextareaBtn" class="btn btn-sm">Clear</button>
+          <button id="resetToDefaultBtn" class="btn btn-sm" style="margin-left: auto;">↺ Reset to Original</button>
+        </div>
+        <textarea id="pasteModalTextarea" class="modal-textarea" style="height: 300px;" placeholder="// Paste your exact C code here..." spellcheck="false"></textarea>
+      </div>
+      <div class="modal-footer">
+        <button id="pasteModalCancelBtn" class="btn">Cancel</button>
+        <button id="savePastedCodeBtn" class="btn btn-primary">💾 Save to Library</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Offline JavaScript Files -->
+  <script src="algorithms.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
