@@ -149,13 +149,12 @@
   }
 
   /**
-   * Offline C Syntax Highlighting
+   * Offline C Syntax Highlighting (OnlineGDB / VS Code Dark Palette)
    * Pure vanilla JS tokenizer that never modifies source code text.
    */
   function highlightC(sourceCode) {
     const escaped = escapeHtml(sourceCode);
     
-    // Tokenize strings, comments, preprocessor, and keywords
     return escaped
       // Multi-line & single-line comments
       .replace(/(\/\*[\s\S]*?\*\/|\/\/[^\r\n]*)/g, '<span class="c-comment">$1</span>')
@@ -163,9 +162,12 @@
       .replace(/(&quot;.*?&quot;|&#39;.*?&#39;)/g, '<span class="c-string">$1</span>')
       // Preprocessor directives (#include, #define)
       .replace(/(^|\n)(\s*#\s*[a-zA-Z_]+[^\r\n]*)/g, '$1<span class="c-preprocessor">$2</span>')
+      // Types
+      .replace(/\b(int|float|double|char|void|long|short|unsigned|signed|struct|typedef|enum|union|const|static|size_t)\b/g, '<span class="c-type">$1</span>')
       // Keywords
-      .replace(/\b(int|float|double|char|void|long|short|unsigned|signed|struct|typedef|enum|union|const|static)\b/g, '<span class="c-type">$1</span>')
       .replace(/\b(return|if|else|while|for|do|break|continue|switch|case|default|goto|sizeof)\b/g, '<span class="c-keyword">$1</span>')
+      // Function names before parenthesis (printf, scanf, main, etc.)
+      .replace(/\b([a-zA-Z_][a-zA-Z0-9_]*)(?=\s*\()/g, '<span class="c-function">$1</span>')
       // Numbers
       .replace(/\b([0-9]+(\.[0-9]+)?)\b/g, '<span class="c-number">$1</span>');
   }
